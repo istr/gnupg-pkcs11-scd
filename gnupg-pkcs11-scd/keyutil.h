@@ -31,13 +31,27 @@
 #ifndef __KEYUTIL_H
 #define __KEYUTIL_H
 
+typedef enum {KEY_RSA, KEY_ECC} key_type_t;
+typedef enum {KEY_RSA_RSA, KEY_ECC_ECC} key_subtype_t;
+
+typedef struct {
+  key_type_t key_type;
+  key_subtype_t key_subtype;
+  int nid;
+  gcry_mpi_t a;
+  gcry_mpi_t b;
+  gcry_mpi_t c;
+} cert_params_t;
+
 gpg_err_code_t
 keyutil_get_cert_mpi (
 	unsigned char *der,
 	size_t len,
-	gcry_mpi_t *p_n_mpi,
-	gcry_mpi_t *p_e_mpi
+	cert_params_t **params
 );
+
+void
+keyutil_params_free (cert_params_t *params);
 
 gpg_err_code_t
 keyutil_get_cert_sexp (
